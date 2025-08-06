@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Layout, 
   Box, 
-  Split, 
   Maximize2, 
   Minimize2,
   Download,
@@ -14,8 +12,6 @@ import {
   Undo,
   Redo,
   Settings,
-  Layers,
-  Grid3X3,
   Eye,
   EyeOff
 } from "lucide-react";
@@ -35,7 +31,7 @@ export function ProfessionalDesignInterface({
   selectedTool, 
   onToolChange 
 }: ProfessionalDesignInterfaceProps) {
-  const [viewMode, setViewMode] = useState<'2d-only' | '3d-only' | 'split' | 'tabs'>('split');
+  const [viewMode, setViewMode] = useState<'2d-only' | '3d-only' | 'tabs'>('2d-only');
   const [activeTab, setActiveTab] = useState('2d');
   const [floorPlanData, setFloorPlanData] = useState<any>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -108,60 +104,6 @@ export function ProfessionalDesignInterface({
           </div>
         );
         
-      case 'split':
-        return (
-          <div className="h-full flex">
-            <div className="flex-1 border-r border-gray-300">
-              <Professional2DEditor
-                projectData={projectData}
-                onProjectDataChange={handleFloorPlanChange}
-                selectedTool={selectedTool}
-                onToolChange={onToolChange}
-              />
-            </div>
-            <div className="flex-1">
-              <Professional3DViewer
-                projectData={projectData}
-                onProjectDataChange={onProjectDataChange}
-                floorPlanData={floorPlanData}
-              />
-            </div>
-          </div>
-        );
-        
-      case 'tabs':
-        return (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-            <TabsList className="grid w-full grid-cols-2 bg-gray-100">
-              <TabsTrigger value="2d" className="data-[state=active]:bg-white">
-                <Layout className="w-4 h-4 mr-2" />
-                2D Floor Plan
-              </TabsTrigger>
-              <TabsTrigger value="3d" className="data-[state=active]:bg-white">
-                <Box className="w-4 h-4 mr-2" />
-                3D Visualization
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="2d" className="flex-1 mt-0">
-              <Professional2DEditor
-                projectData={projectData}
-                onProjectDataChange={handleFloorPlanChange}
-                selectedTool={selectedTool}
-                onToolChange={onToolChange}
-              />
-            </TabsContent>
-            
-            <TabsContent value="3d" className="flex-1 mt-0">
-              <Professional3DViewer
-                projectData={projectData}
-                onProjectDataChange={onProjectDataChange}
-                floorPlanData={floorPlanData}
-              />
-            </TabsContent>
-          </Tabs>
-        );
-        
       default:
         return null;
     }
@@ -179,33 +121,19 @@ export function ProfessionalDesignInterface({
                 variant={viewMode === '2d-only' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('2d-only')}
-                className={`${viewMode === '2d-only' ? 'bg-blue-600 text-white' : ''} px-3`}
+                className={`${viewMode === '2d-only' ? 'bg-blue-600 text-white' : ''} px-4`}
               >
-                <Layout className="w-4 h-4" />
+                <Layout className="w-4 h-4 mr-2" />
+                2D View
               </Button>
               <Button
                 variant={viewMode === '3d-only' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('3d-only')}
-                className={`${viewMode === '3d-only' ? 'bg-blue-600 text-white' : ''} px-3`}
+                className={`${viewMode === '3d-only' ? 'bg-blue-600 text-white' : ''} px-4`}
               >
-                <Box className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'split' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('split')}
-                className={`${viewMode === 'split' ? 'bg-blue-600 text-white' : ''} px-3`}
-              >
-                <Split className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'tabs' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('tabs')}
-                className={`${viewMode === 'tabs' ? 'bg-blue-600 text-white' : ''} px-3`}
-              >
-                <Layers className="w-4 h-4" />
+                <Box className="w-4 h-4 mr-2" />
+                3D View
               </Button>
             </div>
 

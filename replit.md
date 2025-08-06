@@ -6,6 +6,37 @@ DreamCabin is a comprehensive cabin design and construction platform that enable
 
 Preferred communication style: Simple, everyday language.
 
+# Recent Changes
+
+## Intuitive Interface for YouTube Cabin Builders (January 2025)
+Based on user feedback that the 2D/3D canvas wasn't intuitive for actual cabin builders, completely redesigned the interface to be more practical and YouTube-builder-friendly:
+
+### New CabinWizard Component
+- Step-by-step guided experience for new cabin builders
+- Asks practical questions: purpose, budget, timeline, skill level, style preferences
+- Shows realistic cabin templates based on popular YouTube builds (A-frame, tiny house, log cabin, modern shed)
+- Provides size customization with beginner-friendly guidance
+- Integrates authentic cabin photos and realistic cost estimates
+
+### Enhanced Design Canvas  
+- Realistic visual representations of different cabin styles instead of abstract shapes
+- Shows actual room layouts (living area, loft, kitchen, bathroom) based on selected template
+- Includes dimension lines and real measurements that builders can understand
+- Top view and front elevation views for better visualization
+- Grid background matching real-world measurements (1 foot = 15 pixels)
+- Integration with actual cabin build photos from similar YouTube projects
+
+### Database Population
+- Added realistic material categories: Structural, Roofing, Siding, Insulation, Windows & Doors, Interior, Electrical, Plumbing
+- Populated with actual materials cabin builders use: pressure treated lumber, metal roofing, T1-11 siding, etc.
+- Added 4 popular cabin templates based on common YouTube builds with realistic pricing and specifications
+
+### User Experience Improvements
+- "Cabin Wizard" button in toolbar for guided setup
+- Shows either wizard for new users or design interface for existing projects
+- Template-based layouts that match real-world cabin construction
+- Beginner-friendly terminology and explanations throughout interface
+
 # System Architecture
 
 ## Frontend Architecture

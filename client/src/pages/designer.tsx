@@ -11,8 +11,9 @@ import { DesignCanvas } from "@/components/design/DesignCanvas";
 import { PropertiesPanel } from "@/components/design/PropertiesPanel";
 import { BuildGuideModal } from "@/components/modals/BuildGuideModal";
 import { MaterialLibraryModal } from "@/components/modals/MaterialLibraryModal";
+import { CabinWizard } from "@/components/design/CabinWizard";
 import { Button } from "@/components/ui/button";
-import { Undo, Redo, Grid3X3, Eye, Save } from "lucide-react";
+import { Undo, Redo, Grid3X3, Eye, Save, Wand2 } from "lucide-react";
 import type { Project, Template } from "@shared/schema";
 
 export default function Designer() {
@@ -26,6 +27,7 @@ export default function Designer() {
   const [selectedTool, setSelectedTool] = useState<string>('walls');
   const [buildGuideOpen, setBuildGuideOpen] = useState(false);
   const [materialLibraryOpen, setMaterialLibraryOpen] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
   const [projectData, setProjectData] = useState<any>(null);
 
   // Get template ID from query params for new projects
@@ -153,21 +155,11 @@ export default function Designer() {
         designData: template.designData || {},
         buildProgress: {},
       });
-    } else if (!projectId) {
-      // Default new project
-      setProjectData({
-        name: "New Cabin Project",
-        description: "Custom cabin design",
-        width: "24",
-        length: "16",
-        height: "12",
-        area: 384,
-        estimatedCost: null,
-        designData: {},
-        buildProgress: {},
-      });
+    } else if (!projectId && !templateId) {
+      // Show wizard for completely new projects (no template or project ID)
+      setShowWizard(true);
     }
-  }, [project, template, projectId]);
+  }, [project, template, projectId, templateId]);
 
   const handleSaveProject = () => {
     if (!projectData) return;
@@ -259,6 +251,14 @@ export default function Designer() {
                 Grid: 1ft
               </div>
               <Button
+                onClick={() => setShowWizard(true)}
+                variant="outline"
+                size="sm"
+              >
+                <Wand2 className="w-4 h-4 mr-2" />
+                Cabin Wizard
+              </Button>
+              <Button
                 onClick={handleSaveProject}
                 disabled={createProjectMutation.isPending || updateProjectMutation.isPending}
                 variant="outline"
@@ -311,6 +311,34 @@ export default function Designer() {
         onOpenChange={setMaterialLibraryOpen}
         projectId={projectId}
       />
+
+      {/* Cabin Wizard */}
+      {showWizard && (
+        <CabinWizard
+          templates={templates || []}
+          onComplete={(config) => {
+            setProjectData({
+              name: config.name,
+              description: config.name,
+              templateId: config.templateId,
+              width: config.width,
+              length: config.length,
+              height: config.height,
+              area: Number(config.width) * Number(config.length),
+              estimatedCost: null,
+              designData: config.designData || {},
+              buildProgress: {},
+            });
+            setShowWizard(false);
+            
+            toast({
+              title: "Cabin Configured!",
+              description: "Your cabin design is ready. You can now customize it further.",
+            });
+          }}
+          onCancel={() => setShowWizard(false)}
+        />
+      )}
     </div>
   );
 }

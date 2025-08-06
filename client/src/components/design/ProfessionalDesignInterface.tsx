@@ -312,40 +312,52 @@ export function ProfessionalDesignInterface({
         </div>
       </div>
 
-      {/* Layers Panel Overlay */}
+      {/* Layers Panel - Fixed Position */}
       {showLayers && (
-        <Card className="absolute top-20 right-4 w-72 shadow-lg border-0 bg-white/95 backdrop-blur-sm">
-          <CardContent className="p-4">
-            <h3 className="font-semibold mb-3 flex items-center">
-              <Layers className="w-4 h-4 mr-2" />
-              Layers
-            </h3>
-            
-            <div className="space-y-2">
-              {[
-                { name: 'Walls', visible: true, color: '#1f2937' },
-                { name: 'Doors & Windows', visible: true, color: '#3b82f6' },
-                { name: 'Electrical', visible: false, color: '#eab308' },
-                { name: 'Plumbing', visible: false, color: '#06b6d4' },
-                { name: 'Dimensions', visible: true, color: '#6b7280' },
-                { name: 'Grid', visible: true, color: '#e5e7eb' }
-              ].map((layer) => (
-                <div key={layer.name} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div
-                      className="w-3 h-3 rounded border"
-                      style={{ backgroundColor: layer.color }}
-                    />
-                    <span className="text-sm">{layer.name}</span>
+        <div className="absolute top-20 left-4 w-72 z-10 pointer-events-auto">
+          <Card className="shadow-lg border border-gray-200 bg-white">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold flex items-center">
+                  <Layers className="w-4 h-4 mr-2" />
+                  Layers
+                </h3>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowLayers(false)}
+                  className="p-1"
+                >
+                  ×
+                </Button>
+              </div>
+              
+              <div className="space-y-2">
+                {[
+                  { name: 'Walls', visible: true, color: '#1f2937' },
+                  { name: 'Doors & Windows', visible: true, color: '#3b82f6' },
+                  { name: 'Electrical', visible: false, color: '#eab308' },
+                  { name: 'Plumbing', visible: false, color: '#06b6d4' },
+                  { name: 'Dimensions', visible: true, color: '#6b7280' },
+                  { name: 'Grid', visible: true, color: '#e5e7eb' }
+                ].map((layer) => (
+                  <div key={layer.name} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className="w-3 h-3 rounded border"
+                        style={{ backgroundColor: layer.color }}
+                      />
+                      <span className="text-sm">{layer.name}</span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="p-1">
+                      {layer.visible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="sm" className="p-1">
-                    {layer.visible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );

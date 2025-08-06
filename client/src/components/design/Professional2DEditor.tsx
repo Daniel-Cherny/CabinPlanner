@@ -159,6 +159,12 @@ export function Professional2DEditor({
     editorState.doors.forEach(door => drawDoor(ctx, door));
     editorState.windows.forEach(window => drawWindow(ctx, window));
 
+    // Draw electrical elements
+    (editorState as any).electricalElements?.forEach((element: any) => drawElectricalElement(ctx, element));
+    
+    // Draw plumbing elements
+    (editorState as any).plumbingElements?.forEach((element: any) => drawPlumbingElement(ctx, element));
+
     // Draw rooms and labels
     editorState.rooms.forEach(room => drawRoom(ctx, room));
 
@@ -497,6 +503,32 @@ export function Professional2DEditor({
     // Implementation for hover effects
   };
 
+  const drawElectricalElement = (ctx: CanvasRenderingContext2D, element: any) => {
+    ctx.fillStyle = '#eab308';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(element.symbol, element.position.x, element.position.y);
+    
+    // Draw circle background
+    ctx.strokeStyle = '#eab308';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(element.position.x, element.position.y, 12, 0, Math.PI * 2);
+    ctx.stroke();
+  };
+
+  const drawPlumbingElement = (ctx: CanvasRenderingContext2D, element: any) => {
+    ctx.fillStyle = '#06b6d4';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(element.symbol, element.position.x, element.position.y);
+    
+    // Draw square background
+    ctx.strokeStyle = '#06b6d4';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(element.position.x - 12, element.position.y - 12, 24, 24);
+  };
+
   // Mouse event handlers
   const getMousePos = (e: React.MouseEvent): Point => {
     const canvas = canvasRef.current;
@@ -545,7 +577,183 @@ export function Professional2DEditor({
           setCurrentWall(null);
         }
       }
+    } else if (selectedTool === 'door' || selectedTool === 'window') {
+      // Find the closest wall to the click position
+      const closestWall = findClosestWall(pos);
+      if (closestWall) {
+        addDoorOrWindow(closestWall, pos, selectedTool);
+      }
+    } else if (selectedTool === 'electrical') {
+      addElectricalElement(pos);
+    } else if (selectedTool === 'plumbing') {
+      addPlumbingElement(pos);
     }
+  };
+
+  const addElectricalElement = (pos: Point) => {
+    // Add electrical outlet or switch
+    const elementType = Math.random() > 0.5 ? 'outlet' : 'switch';
+    const newElement = {
+      id: `electrical-${Date.now()}`,
+      type: elementType,
+      position: pos,
+      symbol: elementType === 'outlet' ? '⚡' : '💡'
+    };
+    
+    setEditorState(prev => ({
+      ...prev,
+      electricalElements: [...(prev.electricalElements || []), newElement]
+    }));
+  };
+
+  const addPlumbingElement = (pos: Point) => {
+    // Add plumbing fixture
+    const fixtureType = ['sink', 'toilet', 'shower'][Math.floor(Math.random() * 3)];
+    const newFixture = {
+      id: `plumbing-${Date.now()}`,
+      type: fixtureType,
+      position: pos,
+      symbol: fixtureType === 'sink' ? '🚿' : fixtureType === 'toilet' ? '🚽' : '🛁'
+    };
+    
+    setEditorState(prev => ({
+      ...prev,
+      plumbingElements: [...(prev.plumbingElements || []), newFixture]
+    }));
+  };
+
+  const findClosestWall = (point: Point): Wall | null => {
+    let closestWall: Wall | null = null;
+    let minDistance = 20; // Maximum distance to consider
+    
+    editorState.walls.forEach(wall => {
+      const distance = distanceToWall(point, wall);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestWall = wall;
+      }
+    });
+    
+    return closestWall;
+  };
+
+  const distanceToWall = (point: Point, wall: Wall): number => {
+    const A = point.x - wall.start.x;
+    const B = point.y - wall.start.y;
+    const C = wall.end.x - wall.start.x;
+    const D = wall.end.y - wall.start.y;
+
+    const dot = A * C + B * D;
+    const lenSq = C * C + D * D;
+    
+    if (lenSq === 0) return Math.sqrt(A * A + B * B);
+    
+    let param = dot / lenSq;
+    param = Math.max(0, Math.min(1, param));
+
+    const xx = wall.start.x + param * C;
+    const yy = wall.start.y + param * D;
+
+    const dx = point.x - xx;
+    const dy = point.y - yy;
+    
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  const addDoorOrWindow = (wall: Wall, clickPos: Point, type: 'door' | 'window') => {
+    const wallLength = Math.sqrt(
+      Math.pow(wall.end.x - wall.start.x, 2) + 
+      Math.pow(wall.end.y - wall.start.y, 2)
+    );
+    
+    // Calculate position along wall (0 to 1)
+    const A = clickPos.x - wall.start.x;
+    const B = clickPos.y - wall.start.y;
+    const C = wall.end.x - wall.start.x;
+    const D = wall.end.y - wall.start.y;
+    const dot = A * C + B * D;
+    const lenSq = C * C + D * D;
+    const position = Math.max(0.1, Math.min(0.9, dot / lenSq));
+
+    if (type === 'door') {
+      const newDoor: Door = {
+        id: `door-${Date.now()}`,
+        wallId: wall.id,
+        position,
+        width: 36, // inches
+        swing: 'right',
+        type: 'entry'
+      };
+      
+      setEditorState(prev => ({
+        ...prev,
+        doors: [...prev.doors, newDoor]
+      }));
+    } else if (type === 'window') {
+      const newWindow: Window = {
+        id: `window-${Date.now()}`,
+        wallId: wall.id,
+        position,
+        width: 48, // inches
+        height: 36, // inches
+        sillHeight: 30, // inches
+        type: 'double'
+      };
+      
+      setEditorState(prev => ({
+        ...prev,
+        windows: [...prev.windows, newWindow]
+      }));
+    }
+    
+    // Auto-detect rooms after adding door/window
+    detectRooms();
+  };
+
+  const detectRooms = () => {
+    // Simple room detection - find enclosed areas
+    const rooms: Room[] = [];
+    
+    // This is a simplified implementation
+    // In a real CAD application, you'd use more sophisticated algorithms
+    if (editorState.walls.length >= 4) {
+      const bounds = calculateWallBounds();
+      const centerX = (bounds.minX + bounds.maxX) / 2;
+      const centerY = (bounds.minY + bounds.maxY) / 2;
+      const width = bounds.maxX - bounds.minX;
+      const height = bounds.maxY - bounds.minY;
+      const area = Math.round((width * height) / (editorState.gridSize * editorState.gridSize));
+      
+      rooms.push({
+        id: 'main-room',
+        name: 'Main Area',
+        area,
+        walls: editorState.walls.map(w => w.id),
+        center: { x: centerX, y: centerY }
+      });
+    }
+    
+    setEditorState(prev => ({
+      ...prev,
+      rooms
+    }));
+  };
+
+  const calculateWallBounds = () => {
+    if (editorState.walls.length === 0) {
+      return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+    }
+    
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    
+    editorState.walls.forEach(wall => {
+      minX = Math.min(minX, wall.start.x, wall.end.x);
+      minY = Math.min(minY, wall.start.y, wall.end.y);
+      maxX = Math.max(maxX, wall.start.x, wall.end.x);
+      maxY = Math.max(maxY, wall.start.y, wall.end.y);
+    });
+    
+    return { minX, minY, maxX, maxY };
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -619,7 +827,12 @@ export function Professional2DEditor({
       <div ref={containerRef} className="flex-1 relative overflow-hidden">
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 cursor-crosshair"
+          className={`absolute inset-0 ${
+            selectedTool === 'select' ? 'cursor-pointer' :
+            selectedTool === 'wall' ? 'cursor-crosshair' :
+            selectedTool === 'door' || selectedTool === 'window' ? 'cursor-copy' :
+            'cursor-crosshair'
+          }`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -644,6 +857,25 @@ export function Professional2DEditor({
             ) / editorState.gridSize * 12) / 12}'
           </div>
         )}
+
+        {/* Tool Instructions */}
+        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg max-w-xs">
+          <h3 className="font-semibold text-sm mb-2">Tool: {selectedTool}</h3>
+          <p className="text-xs text-gray-600">
+            {selectedTool === 'select' && 'Click to select elements'}
+            {selectedTool === 'wall' && 'Click to start a wall, click again to finish'}
+            {selectedTool === 'door' && 'Click on a wall to add a door'}
+            {selectedTool === 'window' && 'Click on a wall to add a window'}
+            {selectedTool === 'electrical' && 'Click to place electrical outlets and switches'}
+            {selectedTool === 'plumbing' && 'Click to place plumbing fixtures'}
+            {selectedTool === 'measure' && 'Click and drag to measure distances'}
+          </p>
+          {editorState.walls.length > 0 && (
+            <div className="mt-2 text-xs text-green-600">
+              ✓ {editorState.walls.length} walls, {editorState.doors.length} doors, {editorState.windows.length} windows
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

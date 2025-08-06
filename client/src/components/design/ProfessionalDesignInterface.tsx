@@ -12,6 +12,7 @@ import {
   Undo,
   Redo,
   Settings,
+  Layers,
   Eye,
   EyeOff
 } from "lucide-react";

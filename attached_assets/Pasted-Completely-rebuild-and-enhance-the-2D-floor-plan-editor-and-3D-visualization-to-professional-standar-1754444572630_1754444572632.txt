@@ -1,0 +1,91 @@
+Completely rebuild and enhance the 2D floor plan editor and 3D visualization to professional standards that rival SketchUp and RoomSketcher. Here's exactly what I need:
+🎯 2D Floor Plan Editor - Make it Professional
+Core Drawing Tools:
+
+Precision wall drawing with snap-to-grid (1-foot increments) and angle constraints (45°, 90°)
+Smart wall joining that automatically connects and creates corners
+Dimension display showing real measurements as you draw (feet and inches)
+Room auto-detection that recognizes enclosed spaces and labels them
+Magnetic snap points for precise alignment of walls, doors, and windows
+
+Advanced Features:
+
+Door/window library with standard sizes (32", 36" doors, various window styles)
+Drag-and-drop placement with automatic wall cutting for openings
+Wall thickness options (4", 6", 8", 10") with proper framing representation
+Electrical symbols (outlets, switches, lighting) that snap to walls
+Plumbing fixtures (sinks, toilets, showers) with proper spacing guides
+Measurement tools with running dimensions and area calculations per room
+Layer system for electrical, plumbing, structural elements
+
+Professional Polish:
+
+Clean, architectural line weights (thick for walls, thin for dimensions)
+Room labels with automatic square footage calculations
+North arrow and scale indicator
+Print-ready layouts with title blocks and drawing notes
+
+🎮 3D Visualization - Make it Stunning
+Rendering Quality:
+
+Realistic wood textures with proper grain direction and material properties
+Dynamic lighting system with natural sunlight simulation and interior lighting
+Shadow casting that updates based on time of day and season
+Material reflection/roughness for glass, metal, stone surfaces
+High-resolution textures (at least 1024px) for wood, stone, metal finishes
+
+Navigation & Controls:
+
+Smooth camera controls - orbit, pan, zoom with momentum and easing
+First-person walkthrough mode with WASD controls and mouse look
+Preset camera angles (front, back, sides, aerial, interior views)
+Cinematic camera paths for automatic tours through the cabin
+VR-ready viewing for immersive experience
+
+Real-time Features:
+
+Instant updates when 2D plan changes - no refresh needed
+Material swapping with live preview (click any surface to change material)
+Furniture placement in 3D with collision detection
+Lighting controls (toggle interior lights, adjust sun position)
+Weather effects (rain, snow, different seasons) for exterior visualization
+
+🔄 Seamless 2D ↔ 3D Integration
+
+Synchronized editing - changes in 2D instantly reflect in 3D
+Click-to-edit from 3D view (click a wall in 3D to edit it in 2D)
+Split-screen mode showing both views simultaneously
+Measurement overlay in 3D showing dimensions when hovering over elements
+
+📱 Performance & Usability
+Technical Requirements:
+
+60fps performance on standard devices (don't sacrifice speed for features)
+Progressive loading - basic structure loads fast, details load progressively
+Mobile optimization with touch controls and responsive design
+Undo/redo system with unlimited history
+Auto-save every 30 seconds to prevent data loss
+
+User Experience:
+
+Contextual help bubbles explaining tools as users hover
+Smart suggestions (proper door swing directions, standard room sizes)
+Template integration - users can start with proven cabin layouts
+Export options - high-res images, PDFs, and 3D model files
+
+🏗️ Cabin-Specific Features
+Structural Elements:
+
+Log construction visualization with authentic log stacking and chinking
+Timber frame representation with proper beam and joint connections
+Foundation options (concrete slab, pier and beam, full basement)
+Roofing materials (metal, shingles, cedar shake) with proper overhangs
+Porch and deck builders with railing and support post placement
+
+Construction Details:
+
+Framing view toggle showing 2x4, 2x6, 2x8 lumber placement
+Insulation visualization for energy efficiency planning
+Utility routing showing electrical and plumbing paths through walls
+
+Make this feel like using a modern, professional design tool - not a basic hobby app. Users should be impressed within the first 30 seconds of use.*

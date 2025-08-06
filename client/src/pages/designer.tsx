@@ -6,14 +6,12 @@ import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 import { Navigation } from "@/components/ui/navigation";
-import { DesignToolbar } from "@/components/design/DesignToolbar";
-import { DesignCanvas } from "@/components/design/DesignCanvas";
-import { PropertiesPanel } from "@/components/design/PropertiesPanel";
+import { ProfessionalDesignInterface } from "@/components/design/ProfessionalDesignInterface";
 import { BuildGuideModal } from "@/components/modals/BuildGuideModal";
 import { MaterialLibraryModal } from "@/components/modals/MaterialLibraryModal";
 import { CabinWizard } from "@/components/design/CabinWizard";
 import { Button } from "@/components/ui/button";
-import { Undo, Redo, Grid3X3, Eye, Save, Wand2 } from "lucide-react";
+import { Wand2 } from "lucide-react";
 import type { Project, Template } from "@shared/schema";
 
 export default function Designer() {
@@ -184,119 +182,17 @@ export default function Designer() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-cabin-cream">
+    <div className="h-screen flex flex-col bg-white">
       <Navigation />
       
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Design Tools */}
-        <div className="w-80 bg-white shadow-lg border-r border-gray-200 overflow-y-auto">
-          <DesignToolbar
-            selectedTool={selectedTool}
-            onToolSelect={setSelectedTool}
-            templates={templates || []}
-            onTemplateSelect={(template: Template) => {
-              handleProjectDataChange({
-                templateId: template.id,
-                name: `${template.name} Project`,
-                width: template.defaultWidth,
-                length: template.defaultLength,
-                height: template.defaultHeight,
-                designData: template.designData || {},
-              });
-            }}
-            projectData={projectData}
-            onOpenMaterialLibrary={() => setMaterialLibraryOpen(true)}
-          />
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Canvas Toolbar */}
-          <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex bg-gray-100 rounded-lg p-1">
-                <Button
-                  variant={viewMode === '2d' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('2d')}
-                  className={viewMode === '2d' ? 'bg-cabin-brown text-white' : ''}
-                >
-                  2D Plan
-                </Button>
-                <Button
-                  variant={viewMode === '3d' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('3d')}
-                  className={viewMode === '3d' ? 'bg-cabin-brown text-white' : ''}
-                >
-                  3D View
-                </Button>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm">
-                  <Undo className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Redo className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Grid3X3 className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="text-sm cabin-text">
-                Grid: 1ft
-              </div>
-              <Button
-                onClick={() => setShowWizard(true)}
-                variant="outline"
-                size="sm"
-              >
-                <Wand2 className="w-4 h-4 mr-2" />
-                Cabin Wizard
-              </Button>
-              <Button
-                onClick={handleSaveProject}
-                disabled={createProjectMutation.isPending || updateProjectMutation.isPending}
-                variant="outline"
-                size="sm"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                {createProjectMutation.isPending || updateProjectMutation.isPending ? 'Saving...' : 'Save'}
-              </Button>
-              <Button
-                onClick={() => setBuildGuideOpen(true)}
-                className="bg-cabin-green hover:bg-cabin-green/90 text-white"
-                size="sm"
-              >
-                Build Guide
-              </Button>
-            </div>
-          </div>
-
-          {/* Design Canvas */}
-          <div className="flex-1">
-            <DesignCanvas
-              viewMode={viewMode}
-              selectedTool={selectedTool}
-              projectData={projectData}
-              onProjectDataChange={handleProjectDataChange}
-            />
-          </div>
-        </div>
-
-        {/* Right Sidebar - Properties */}
-        <div className="w-96 bg-white shadow-lg border-l border-gray-200 overflow-y-auto">
-          <PropertiesPanel
-            projectData={projectData}
-            onProjectDataChange={handleProjectDataChange}
-            onOpenBuildGuide={() => setBuildGuideOpen(true)}
-            onOpenMaterialLibrary={() => setMaterialLibraryOpen(true)}
-          />
-        </div>
+      {/* Professional Design Interface */}
+      <div className="flex-1 overflow-hidden">
+        <ProfessionalDesignInterface
+          projectData={projectData}
+          onProjectDataChange={handleProjectDataChange}
+          selectedTool={selectedTool}
+          onToolChange={setSelectedTool}
+        />
       </div>
 
       {/* Modals */}

@@ -21,17 +21,40 @@ export function Scene3D({ projectData }: Scene3DProps) {
 
     const placeholder = document.createElement('div');
     placeholder.className = 'w-full h-full bg-gradient-to-b from-blue-100 to-green-100 flex items-center justify-center';
-    placeholder.innerHTML = `
-      <div class="text-center">
-        <div class="text-4xl mb-4">🏠</div>
-        <p class="cabin-text font-medium text-lg mb-2">3D Visualization</p>
-        <p class="text-sm cabin-text opacity-75 mb-4">Three.js integration coming soon</p>
-        <div class="text-sm cabin-text">
-          <p>Project: ${projectData?.name || 'Untitled'}</p>
-          <p>Size: ${projectData?.width || '24'}'×${projectData?.length || '16'}'</p>
-        </div>
-      </div>
-    `;
+    
+    // Create DOM structure safely without innerHTML
+    const centerDiv = document.createElement('div');
+    centerDiv.className = 'text-center';
+    
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'text-4xl mb-4';
+    iconDiv.textContent = '🏠';
+    
+    const titleP = document.createElement('p');
+    titleP.className = 'cabin-text font-medium text-lg mb-2';
+    titleP.textContent = '3D Visualization';
+    
+    const subtitleP = document.createElement('p');
+    subtitleP.className = 'text-sm cabin-text opacity-75 mb-4';
+    subtitleP.textContent = 'Three.js integration coming soon';
+    
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'text-sm cabin-text';
+    
+    const projectP = document.createElement('p');
+    projectP.textContent = `Project: ${projectData?.name || 'Untitled'}`;
+    
+    const sizeP = document.createElement('p');
+    sizeP.textContent = `Size: ${projectData?.width || '24'}'×${projectData?.length || '16'}'`;
+    
+    // Assemble the DOM structure
+    infoDiv.appendChild(projectP);
+    infoDiv.appendChild(sizeP);
+    centerDiv.appendChild(iconDiv);
+    centerDiv.appendChild(titleP);
+    centerDiv.appendChild(subtitleP);
+    centerDiv.appendChild(infoDiv);
+    placeholder.appendChild(centerDiv);
 
     mountRef.current.appendChild(placeholder);
 

@@ -84,12 +84,6 @@ export function ProfessionalDesignInterface({
     }
   }, [projectData, project, setProject]);
 
-  // Handle prop-based tool changes (for backward compatibility)
-  useEffect(() => {
-    if (propSelectedTool && propSelectedTool !== selectedTool) {
-      setSelectedTool(propSelectedTool);
-    }
-  }, [propSelectedTool, selectedTool, setSelectedTool]);
 
   // Update sync status periodically
   useEffect(() => {

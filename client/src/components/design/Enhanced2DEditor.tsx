@@ -35,7 +35,8 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Store subscriptions
+  // Store subscriptions with explicit selector for selectedTool to ensure re-renders
+  const selectedTool = useDesignStore((state) => state.selectedTool);
   const {
     walls,
     doors,
@@ -43,7 +44,6 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
     rooms,
     electricalElements,
     plumbingElements,
-    selectedTool,
     selectedElements,
     hoveredElement,
     viewSettings,

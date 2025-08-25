@@ -40,10 +40,10 @@ export function ProfessionalDesignInterface({
   selectedTool: propSelectedTool, 
   onToolChange: propOnToolChange 
 }: ProfessionalDesignInterfaceProps) {
-  // Use global state instead of local state
+  // Use global state with explicit selector for selectedTool to ensure re-renders
+  const selectedTool = useDesignStore((state) => state.selectedTool);
   const {
     project,
-    selectedTool,
     splitViewMode,
     activePane,
     syncEnabled,

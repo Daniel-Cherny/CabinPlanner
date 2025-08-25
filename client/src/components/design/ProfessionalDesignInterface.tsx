@@ -108,8 +108,7 @@ export function ProfessionalDesignInterface({
 
   const handleToolChange = useCallback((tool: string) => {
     setSelectedTool(tool);
-    propOnToolChange?.(tool);
-  }, [setSelectedTool, propOnToolChange]);
+  }, [setSelectedTool]);
 
   const handleElementClick = useCallback((elementId: string, elementType: string) => {
     // This handles clicks from either 2D or 3D views

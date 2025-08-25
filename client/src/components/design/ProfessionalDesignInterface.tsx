@@ -30,15 +30,11 @@ import Enhanced3DViewer from './Enhanced3DViewer';
 interface ProfessionalDesignInterfaceProps {
   projectData?: any;
   onProjectDataChange?: (updates: any) => void;
-  selectedTool?: string;
-  onToolChange?: (tool: string) => void;
 }
 
 export function ProfessionalDesignInterface({ 
   projectData, 
-  onProjectDataChange, 
-  selectedTool: propSelectedTool, 
-  onToolChange: propOnToolChange 
+  onProjectDataChange 
 }: ProfessionalDesignInterfaceProps) {
   // Use global state with explicit selector for selectedTool to ensure re-renders
   const selectedTool = useDesignStore((state) => state.selectedTool);

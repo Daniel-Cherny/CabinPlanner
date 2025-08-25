@@ -211,7 +211,10 @@ export function ProfessionalDesignInterface({
               <Button
                 variant={splitViewMode === '2d-only' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setSplitViewMode('2d-only')}
+                onClick={() => {
+                  setSplitViewMode('2d-only');
+                  setActivePane('2d');
+                }}
                 className={`${splitViewMode === '2d-only' ? 'bg-blue-600 text-white' : ''} px-3`}
               >
                 <Layout className="w-4 h-4 mr-1" />
@@ -220,7 +223,10 @@ export function ProfessionalDesignInterface({
               <Button
                 variant={splitViewMode === '3d-only' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setSplitViewMode('3d-only')}
+                onClick={() => {
+                  setSplitViewMode('3d-only');
+                  setActivePane('3d');
+                }}
                 className={`${splitViewMode === '3d-only' ? 'bg-blue-600 text-white' : ''} px-3`}
               >
                 <Box className="w-4 h-4 mr-1" />
@@ -229,7 +235,10 @@ export function ProfessionalDesignInterface({
               <Button
                 variant={splitViewMode === 'split-horizontal' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setSplitViewMode('split-horizontal')}
+                onClick={() => {
+                  setSplitViewMode('split-horizontal');
+                  setActivePane('2d'); // Default to 2D pane in split mode
+                }}
                 className={`${splitViewMode === 'split-horizontal' ? 'bg-blue-600 text-white' : ''} px-2`}
               >
                 <SplitSquareHorizontal className="w-4 h-4" />
@@ -237,7 +246,10 @@ export function ProfessionalDesignInterface({
               <Button
                 variant={splitViewMode === 'split-vertical' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setSplitViewMode('split-vertical')}
+                onClick={() => {
+                  setSplitViewMode('split-vertical');
+                  setActivePane('2d'); // Default to 2D pane in split mode
+                }}
                 className={`${splitViewMode === 'split-vertical' ? 'bg-blue-600 text-white' : ''} px-2`}
               >
                 <SplitSquareVertical className="w-4 h-4" />

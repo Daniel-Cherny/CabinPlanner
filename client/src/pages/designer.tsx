@@ -22,7 +22,7 @@ export default function Designer() {
   const queryClient = useQueryClient();
 
   const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
-  const [selectedTool, setSelectedTool] = useState<string>('walls');
+  const [selectedTool, setSelectedTool] = useState<string>('select');
   const [buildGuideOpen, setBuildGuideOpen] = useState(false);
   const [materialLibraryOpen, setMaterialLibraryOpen] = useState(false);
   const [showWizard, setShowWizard] = useState(false);

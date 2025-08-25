@@ -552,7 +552,7 @@ export const useDesignStore = create<DesignState & DesignActions>()(
       setSelectedTool: (tool: string) =>
         set((state) => {
           state.selectedTool = tool;
-          if (tool !== 'wall') {
+          if (tool !== 'walls') {
             state.isDrawing = false;
             state.currentWall = null;
           }

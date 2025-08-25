@@ -415,7 +415,7 @@ export function ProfessionalDesignInterface({
 
       {/* Enhanced Layers Panel - Fixed Position */}
       {showLayers && (
-        <div className="absolute top-20 left-4 w-72 z-10 pointer-events-auto">
+        <div className="absolute top-24 right-4 w-72 z-20 pointer-events-auto">
           <Card className="shadow-lg border border-gray-200 bg-white">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">

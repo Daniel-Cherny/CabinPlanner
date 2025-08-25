@@ -560,6 +560,10 @@ export function useEditorCanvas({ store }: UseEditorCanvasParams): UseEditorCanv
       if (e.key === 'w') setSelectedTool('walls');
       if (e.key === 'd') setSelectedTool('doors');
       if (e.key === 'n') setSelectedTool('windows');
+      if (e.key === 'r') setSelectedTool('rooms');
+      if (e.key === 'e') setSelectedTool('electrical');
+      if (e.key === 'p') setSelectedTool('plumbing');
+      if (e.key === 'm') setSelectedTool('measure');
       if (e.key === 's') setSelectedTool('select');
       
       // Toggle grid

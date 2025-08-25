@@ -673,7 +673,7 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
         // Start selection box
         setSelectionBox({ start: pos, end: pos });
       }
-    } else if (selectedTool === 'wall') {
+    } else if (selectedTool === 'walls') {
       if (!isDrawing) {
         // Start drawing wall
         setIsDrawing(true);
@@ -701,15 +701,15 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
           triggerSync();
         }
       }
-    } else if (selectedTool === 'door' || selectedTool === 'window') {
+    } else if (selectedTool === 'doors' || selectedTool === 'windows') {
       const closestWall = findClosestWall(pos);
       if (closestWall) {
-        if (selectedTool === 'door') {
+        if (selectedTool === 'doors') {
           addDoorToWall(closestWall, pos);
         } else {
           addWindowToWall(closestWall, pos);
         }
-        saveToHistory(`Add ${selectedTool}`);
+        saveToHistory(`Add ${selectedTool.slice(0, -1)}`); // Remove 's' for history
         triggerSync();
       }
     } else if (selectedTool === 'electrical') {
@@ -733,6 +733,15 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
       addPlumbingElement(newElement);
       saveToHistory('Add plumbing element');
       triggerSync();
+    } else if (selectedTool === 'rooms') {
+      // Room tool - for now just detect rooms automatically
+      detectRooms();
+      saveToHistory('Detect rooms');
+      triggerSync();
+    } else if (selectedTool === 'measure') {
+      // Measure tool - for now just log the click position
+      console.log('Measure tool clicked at:', pos);
+      // TODO: Implement measurement functionality
     }
   }, [
     selectedTool, isDrawing, currentWall, selectedElements, viewSettings,
@@ -988,10 +997,10 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
   // Tool configuration
   const tools = [
     { id: 'select', icon: MousePointer, name: 'Select' },
-    { id: 'wall', icon: Minus, name: 'Wall' },
-    { id: 'door', icon: DoorOpen, name: 'Door' },
-    { id: 'window', icon: RectangleHorizontal, name: 'Window' },
-    { id: 'room', icon: Square, name: 'Room' },
+    { id: 'walls', icon: Minus, name: 'Wall' },
+    { id: 'doors', icon: DoorOpen, name: 'Door' },
+    { id: 'windows', icon: RectangleHorizontal, name: 'Window' },
+    { id: 'rooms', icon: Square, name: 'Room' },
     { id: 'electrical', icon: Zap, name: 'Electrical' },
     { id: 'plumbing', icon: Droplets, name: 'Plumbing' },
     { id: 'measure', icon: Ruler, name: 'Measure' }
@@ -1094,8 +1103,8 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
           ref={canvasRef}
           className={`absolute inset-0 ${
             selectedTool === 'select' ? 'cursor-pointer' :
-            selectedTool === 'wall' ? 'cursor-crosshair' :
-            selectedTool === 'door' || selectedTool === 'window' ? 'cursor-copy' :
+            selectedTool === 'walls' ? 'cursor-crosshair' :
+            selectedTool === 'doors' || selectedTool === 'windows' ? 'cursor-copy' :
             isPanning ? 'cursor-grabbing' :
             'cursor-crosshair'
           }`}
@@ -1126,7 +1135,7 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
 
         {/* Current measurement display */}
         {isDrawing && currentWall?.start && (
-          <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-2 rounded-lg shadow-lg">
+          <div className="absolute top-80 right-4 bg-red-600 text-white px-3 py-2 rounded-lg shadow-lg">
             Length: {Math.round(Math.sqrt(
               Math.pow(mousePos.x - currentWall.start.x, 2) + 
               Math.pow(mousePos.y - currentWall.start.y, 2)
@@ -1139,9 +1148,10 @@ export function Enhanced2DEditor({ onElementClick }: Enhanced2DEditorProps) {
           <h3 className="font-semibold text-sm mb-2">Tool: {selectedTool}</h3>
           <p className="text-xs text-gray-600">
             {selectedTool === 'select' && 'Click to select, drag to box select, Ctrl+click for multi-select'}
-            {selectedTool === 'wall' && 'Click to start wall, click again to finish. ESC to cancel'}
-            {selectedTool === 'door' && 'Click on a wall to add a door'}
-            {selectedTool === 'window' && 'Click on a wall to add a window'}
+            {selectedTool === 'walls' && 'Click to start wall, click again to finish. ESC to cancel'}
+            {selectedTool === 'doors' && 'Click on a wall to add a door'}
+            {selectedTool === 'windows' && 'Click on a wall to add a window'}
+            {selectedTool === 'rooms' && 'Click to define room boundaries'}
             {selectedTool === 'electrical' && 'Click to place electrical outlets and switches'}
             {selectedTool === 'plumbing' && 'Click to place plumbing fixtures'}
             {selectedTool === 'measure' && 'Click and drag to measure distances'}

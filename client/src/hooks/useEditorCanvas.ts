@@ -147,20 +147,29 @@ export function useEditorCanvas({ store }: UseEditorCanvasParams): UseEditorCanv
 
     // Draw walls from the store
     if (viewSettings.showLayers.walls) {
-      ctx.strokeStyle = '#1f2937';
-      ctx.lineWidth = 4 / viewSettings.zoom;
       ctx.lineCap = 'square';
       ctx.lineJoin = 'miter';
 
       walls.forEach(wall => {
+        const isSelected = selectedElements.includes(wall.id);
+        
+        // Set style based on selection state
+        if (isSelected) {
+          ctx.strokeStyle = '#3b82f6'; // Blue for selected
+          ctx.lineWidth = 6 / viewSettings.zoom; // Thicker for selected
+        } else {
+          ctx.strokeStyle = '#1f2937'; // Dark gray for normal
+          ctx.lineWidth = 4 / viewSettings.zoom; // Normal thickness
+        }
+
         ctx.beginPath();
         ctx.moveTo(wall.start.x, wall.start.y);
         ctx.lineTo(wall.end.x, wall.end.y);
         ctx.stroke();
 
-        // Draw wall endpoints
-        ctx.fillStyle = '#1f2937';
-        const pointSize = 4 / viewSettings.zoom;
+        // Draw wall endpoints with selection colors
+        ctx.fillStyle = isSelected ? '#3b82f6' : '#1f2937';
+        const pointSize = isSelected ? 6 / viewSettings.zoom : 4 / viewSettings.zoom;
         ctx.fillRect(wall.start.x - pointSize/2, wall.start.y - pointSize/2, pointSize, pointSize);
         ctx.fillRect(wall.end.x - pointSize/2, wall.end.y - pointSize/2, pointSize, pointSize);
       });
@@ -282,7 +291,7 @@ export function useEditorCanvas({ store }: UseEditorCanvasParams): UseEditorCanv
 
     // Draw UI elements (not affected by transform)
     drawUI(ctx, canvas);
-  }, [walls, doors, windows, electricalElements, plumbingElements, viewSettings, gridSettings, selectedTool, isDrawing, currentWallStart, mousePos, performanceMetrics]);
+  }, [walls, doors, windows, electricalElements, plumbingElements, viewSettings, gridSettings, selectedTool, selectedElements, isDrawing, currentWallStart, mousePos, performanceMetrics]);
 
   // Animation loop
   const animate = useCallback((timestamp: number) => {
@@ -451,7 +460,23 @@ export function useEditorCanvas({ store }: UseEditorCanvasParams): UseEditorCanv
         addWindow(newWindow);
       }
     }
-  }, [selectedTool, isDrawing, currentWallStart, gridSettings, screenToWorld, addWall, addDoor, addWindow, walls]);
+
+    // Handle selection
+    if (selectedTool === 'select') {
+      // Check if clicked near a wall
+      const closestWall = findClosestWall(snappedPos, walls);
+      if (closestWall && closestWall.distance < 20) {
+        // Detect multi-select (Ctrl or Shift key)
+        const multiSelect = e.ctrlKey || e.shiftKey;
+        selectElement(closestWall.wall.id, multiSelect);
+      } else {
+        // Clicked on empty space - clear selection unless multi-selecting
+        if (!e.ctrlKey && !e.shiftKey) {
+          clearSelection();
+        }
+      }
+    }
+  }, [selectedTool, isDrawing, currentWallStart, gridSettings, screenToWorld, addWall, addDoor, addWindow, walls, selectElement, clearSelection]);
 
   // Handle mouse move
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {

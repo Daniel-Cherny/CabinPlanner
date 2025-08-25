@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -15,7 +16,8 @@ import {
   RotateCcw,
   Undo,
   Redo,
-  MousePointer
+  MousePointer,
+  Trash2
 } from "lucide-react";
 
 // Import our state management and custom hook
@@ -48,15 +50,31 @@ export function Professional2DEditor({ projectData, onProjectDataChange }: Profe
     doors,
     windows,
     selectedTool,
+    selectedElements,
     viewSettings,
     gridSettings,
     setSelectedTool,
     updateViewSettings,
+    deleteSelectedElements,
     undo,
     redo,
     canUndo,
     canRedo
   } = store;
+
+  // Add keyboard shortcuts for deletion
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Delete/Backspace key for deleting selected elements
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElements.length > 0) {
+        e.preventDefault();
+        deleteSelectedElements();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedElements, deleteSelectedElements]);
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
@@ -156,6 +174,15 @@ export function Professional2DEditor({ projectData, onProjectDataChange }: Profe
               title="Redo (Ctrl+Y)"
             >
               <Redo className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => deleteSelectedElements()}
+              disabled={selectedElements.length === 0}
+              title="Delete Selected (Delete/Backspace)"
+            >
+              <Trash2 className="w-4 h-4" />
             </Button>
             <Button
               variant="ghost"

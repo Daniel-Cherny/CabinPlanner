@@ -230,6 +230,7 @@ export interface DesignActions {
   // Selection and interaction
   setSelectedTool: (tool: string) => void;
   setSelectedElements: (elementIds: string[]) => void;
+  selectElement: (elementId: string, multiSelect?: boolean) => void;
   addToSelection: (elementId: string) => void;
   removeFromSelection: (elementId: string) => void;
   clearSelection: () => void;
@@ -560,6 +561,21 @@ export const useDesignStore = create<DesignState & DesignActions>()(
       setSelectedElements: (elementIds: string[]) =>
         set((state) => {
           state.selectedElements = elementIds;
+        }),
+
+      selectElement: (elementId: string, multiSelect: boolean = false) =>
+        set((state) => {
+          if (multiSelect) {
+            // Multi-select: toggle the element in selection
+            if (state.selectedElements.includes(elementId)) {
+              state.selectedElements = state.selectedElements.filter(id => id !== elementId);
+            } else {
+              state.selectedElements.push(elementId);
+            }
+          } else {
+            // Single select: replace selection with this element
+            state.selectedElements = [elementId];
+          }
         }),
 
       addToSelection: (elementId: string) =>

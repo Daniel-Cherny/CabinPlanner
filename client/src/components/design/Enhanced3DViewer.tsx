@@ -391,7 +391,7 @@ export function Enhanced3DViewer({ onElementClick }: Enhanced3DViewerProps) {
     // Create wall geometry
     const wallGeometry = new THREE.BoxGeometry(
       wallLength / 12, // Convert from pixels to feet
-      (wall.height || 10) / 12,
+      wall.height || 10, // Height is already in feet
       (wall.thickness || 6) / 12
     );
     
@@ -399,7 +399,7 @@ export function Enhanced3DViewer({ onElementClick }: Enhanced3DViewerProps) {
     const wallMesh = new THREE.Mesh(wallGeometry, wallMaterial);
     
     // Position and rotate wall
-    wallMesh.position.set(centerX / 12, (wall.height || 10) / 24, -centerZ / 12);
+    wallMesh.position.set(centerX / 12, (wall.height || 10) / 2, -centerZ / 12);
     wallMesh.rotation.y = -angle;
     wallMesh.castShadow = true;
     wallMesh.receiveShadow = true;

@@ -32,19 +32,20 @@ export default function Designer() {
   const urlParams = new URLSearchParams(location.split('?')[1] || '');
   const templateId = urlParams.get('template');
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated - DISABLED FOR DEMO
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-      return;
-    }
+    // Authentication check disabled for demo
+    // if (!isLoading && !isAuthenticated) {
+    //   toast({
+    //     title: "Unauthorized",
+    //     description: "You are logged out. Logging in again...",
+    //     variant: "destructive",
+    //   });
+    //   setTimeout(() => {
+    //     window.location.href = "/api/login";
+    //   }, 500);
+    //   return;
+    // }
   }, [isAuthenticated, isLoading, toast]);
 
   // Load existing project
@@ -173,9 +174,10 @@ export default function Designer() {
     setProjectData((prev: any) => ({ ...prev, ...updates }));
   };
 
-  if (isLoading || !isAuthenticated) {
-    return <div>Loading...</div>;
-  }
+  // Authentication check disabled for demo
+  // if (isLoading || !isAuthenticated) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (projectId && projectLoading) {
     return <div>Loading project...</div>;

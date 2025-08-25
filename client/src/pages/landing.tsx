@@ -14,7 +14,7 @@ export default function Landing() {
               <h1 className="text-xl font-playfair font-semibold cabin-text">DreamCabin</h1>
             </div>
             <Button 
-              onClick={() => window.location.href = "/api/login"} 
+              onClick={() => window.location.href = "/designer"} 
               className="bg-cabin-brown hover:bg-cabin-brown/90 text-white"
             >
               Get Started
@@ -36,7 +36,7 @@ export default function Landing() {
           </p>
           <Button 
             size="lg" 
-            onClick={() => window.location.href = "/api/login"}
+            onClick={() => window.location.href = "/designer"}
             className="bg-cabin-brown hover:bg-cabin-brown/90 text-white px-8 py-4 text-lg"
           >
             Start Designing Now
@@ -132,7 +132,7 @@ export default function Landing() {
           </p>
           <Button 
             size="lg"
-            onClick={() => window.location.href = "/api/login"}
+            onClick={() => window.location.href = "/designer"}
             className="bg-white text-cabin-brown hover:bg-gray-100 px-8 py-4 text-lg"
           >
             Start Your Project Today
